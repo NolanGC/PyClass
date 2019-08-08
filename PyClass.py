@@ -8,7 +8,6 @@ __email__   = "nolangclement@gmail.com"
 __status__  = "Development"
 
 
-from __future__ import print_function
 import pickle
 import os.path
 import datetime
@@ -61,7 +60,7 @@ def due_assignments(service, out):
     classes = service.courses().list(pageSize=10).execute().get('courses', [])
     #Iterates over each class
     for c in classes:
-        out += (c['name'] + "\n")
+        out += ("<strong>" + c['name'] + "</strong>" + "\n")
         course_work = []
         #Interface with classroom api
         response = service.courses().courseWork().list(courseId=c['id'], pageSize=100).execute()
@@ -76,9 +75,9 @@ def due_assignments(service, out):
                     dueIn = int(time.strftime('%H')) - work['dueTime']['hours'] #TODO finish functionality 
 
                     if(show_description):
-                        out += (work['title'] + " - " + work['description'] + " | due in " + str(dueIn) + " hours.\n")
+                        out += ("<u>" + work['title'] + "</u>" + " - " + work['description'] + " | due in " + str(dueIn) + " hours.\n")
                     else:
-                        out += (work['title'] + " - " + " due in " + str(dueIn) + " hours.")
+                        out += ("<u>" + work['title'] + "</u>" + " - " + " due in " + str(dueIn) + " hours.")
             except KeyError:
                 pass
                 #print("Assignment '" + work['title'] +  "' has no due date.")
@@ -99,9 +98,11 @@ def send_email(text):
     t = open("template.html", "r")
     template = t.read()
     h = ("Daily summary for " + str(dt.month) + "/" + str(dt.day) + "/" + str(dt.year) + ":\n\n")
+    text = text.replace("\n", "<br />\n")
     template = template.replace("[HEADER]", h)
     template = template.replace("[BODY]", text)
     final = MIMEText(template, "html")
+
     #Attach text body
     msg.attach(final)
 
