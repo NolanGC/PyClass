@@ -50,7 +50,7 @@ def establish_creds():
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+            pickle.dump(creds, token, protocol=2)
 
     service = build('classroom', 'v1', credentials=creds)
     return service
@@ -72,7 +72,7 @@ def due_assignments(service, out):
                 if(dt.year == work['dueDate']['year'] and dt.month == work['dueDate']['month'] 
                     and dt.day == work['dueDate']['day'] - 1):
                     #Assignment is due today
-                    dueIn = int(time.strftime('%H')) - work['dueTime']['hours'] #TODO finish functionality 
+                    dueIn = work['dueTime']['hours'] - int(time.strftime('%H')) #TODO finish functionality 
 
                     if(show_description):
                         out += ("<u>" + work['title'] + "</u>" + " - " + work['description'] + " | due in " + str(dueIn) + " hours.\n")
