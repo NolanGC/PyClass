@@ -3,7 +3,7 @@
 """PyClass.py: Daily homework reminder via email using Google Classroom's API and smtp."""
 
 __author__  = "Nolan Clement"
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 __email__   = "nolangclement@gmail.com"
 __status__  = "Development"
 
