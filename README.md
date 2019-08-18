@@ -1,7 +1,7 @@
 # PyClass
 Daily homework reminder via email using Google Classroom's API and smtp.
 
-##Setup
+## Setup
 
 Open terminal and run this command 
 
