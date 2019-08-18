@@ -10,6 +10,7 @@ __status__  = "Development"
 
 import pickle
 import os.path
+import sys
 import datetime
 import smtplib, ssl
 import time
@@ -22,12 +23,12 @@ from google.auth.transport.requests import Request
 
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https://www.googleapis.com/auth/classroom.coursework.students']
+SCOPES = ['https://www.googleapis.com/auth/classroom.courses', 'https://www.googleapis.com/auth/classroom.coursework.me']
 
 # *CONFIG*
 email = "600021071@fjuhsd.org" # Email that will recieve the summary
 password = "nkRPL54z" # Summary will be sent from the recipients email
-show_description = True # Description of due assignments is included in the summary 
+show_description = False # Description of due assignments is included in the summary 
 show_overdue = True # Previously shown assignments are included in the summary
 
 #Empty string to build message body
@@ -58,10 +59,15 @@ def establish_creds():
 
 def due_assignments(service, out):
     classes = service.courses().list(pageSize=10).execute().get('courses', [])
+    #Remove archived courses
+    for c in classes:
+        if(c['courseState'] == 'ARCHIVED'):
+            classes.remove(c)
     #Iterates over each class
     for c in classes:
         out += ("<strong>" + c['name'] + "</strong>" + "\n")
         course_work = []
+        
         #Interface with classroom api
         response = service.courses().courseWork().list(courseId=c['id'], pageSize=100).execute()
         course_work.extend(response.get('courseWork', []))
@@ -73,11 +79,11 @@ def due_assignments(service, out):
                     and dt.day == work['dueDate']['day'] - 1):
                     #Assignment is due today
                     dueIn = work['dueTime']['hours'] - int(time.strftime('%H')) #TODO finish functionality 
-
+                    print(dueIn)
                     if(show_description):
                         out += ("<u>" + work['title'] + "</u>" + " - " + work['description'] + " | due in " + str(dueIn) + " hours.\n")
                     else:
-                        out += ("<u>" + work['title'] + "</u>" + " - " + " due in " + str(dueIn) + " hours.")
+                        out += ("<u>" + work['title'] + "</u>" + " - " + " due in " + str(dueIn) + " hours.\n")
             except KeyError:
                 pass
                 #print("Assignment '" + work['title'] +  "' has no due date.")
@@ -149,7 +155,7 @@ def main():
     msg = due_assignments(service, out)
     if(show_overdue):
         overdue_assignments()
-    send_email(msg)
+    #send_email(msg)
 
 
 if __name__ == '__main__':
