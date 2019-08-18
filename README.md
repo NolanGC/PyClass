@@ -1,5 +1,10 @@
 # PyClass
+
 Daily homework reminder via email using Google Classroom's API and smtp.
+
+### Prerequisites
+
+[Python 3](https://www.python.org/downloads/)
 
 ## Setup
 
@@ -35,7 +40,15 @@ Run the following command
 
 > pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib --user
 
+Make a virtual env in .virtualenvs/ --- *TODO EXPLAIN THIS* ---
+
 Navigate to *Tasks*
 
+Make a task with the following command template
+> /home/USER/.virtualenvs/VIRTUALENVNAME/bin/python /home/USER/PROJECTNAME/PyClass.py
 
-TODO FINISH
+## Running a test
+
+Set the task to a time just after the current time, wait for an email.
+
+
