@@ -3,9 +3,9 @@
 """PyClass.py: Daily homework reminder via email using Google Classroom's API and smtp."""
 
 __author__  = "Nolan Clement"
-__version__ = "1.0.2"
+__version__ = "1.1"
 __email__   = "nolangclement@gmail.com"
-__status__  = "Development"
+__status__  = "Testing"
 
 
 import pickle
@@ -27,7 +27,7 @@ SCOPES = ['https://www.googleapis.com/auth/classroom.courses', 'https://www.goog
 
 # *CONFIG*
 email = "600021071@fjuhsd.org" # Email that will recieve the summary
-password = "nkRPL54z" # Summary will be sent from the recipients email
+password = "-----" # Summary will be sent from the recipients email
 show_description = False # Description of due assignments is included in the summary 
 show_overdue = True # Previously shown assignments are included in the summary
 
@@ -76,10 +76,9 @@ def due_assignments(service, out):
             try:
                 #Check for assignments due today
                 if(dt.year == work['dueDate']['year'] and dt.month == work['dueDate']['month'] 
-                    and dt.day == work['dueDate']['day'] - 1):
+                    and dt.day == work['dueDate']['day']):
                     #Assignment is due today
                     dueIn = work['dueTime']['hours'] - int(time.strftime('%H')) #TODO finish functionality 
-                    print(dueIn)
                     if(show_description):
                         out += ("<u>" + work['title'] + "</u>" + " - " + work['description'] + " | due in " + str(dueIn) + " hours.\n")
                     else:
@@ -155,7 +154,7 @@ def main():
     msg = due_assignments(service, out)
     if(show_overdue):
         overdue_assignments()
-    #send_email(msg)
+    send_email(msg)
 
 
 if __name__ == '__main__':
